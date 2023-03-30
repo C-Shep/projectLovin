@@ -1,0 +1,3 @@
+﻿  main.cpp
+D:\_202\_projectLovin\projectLovin\projectLovin\main.cpp(35,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  projectLovin.vcxproj -> D:\_202\_projectLovin\projectLovin\Debug\projectLovin.exe
