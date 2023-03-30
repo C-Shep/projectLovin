@@ -34,7 +34,7 @@ int threadFunc()
 {
 	srand(time(0));
 
-	for (int i = 0; i < 100000; ++i)
+	for (int i = 0; i < 100; ++i)
 	{
 		//Unique Mutex
 		std::unique_lock<std::mutex>lock(mutex);
@@ -44,6 +44,7 @@ int threadFunc()
 		Skins currentSkin = skinList[randomSkin];
 		wallet.subtract(2, 15);
 		wallet.add(currentSkin.pounds, currentSkin.pence);
+		cout << "\n" << currentSkin.name << " - " << currentSkin.pounds << "." << currentSkin.pence;
 	}
 
 	return 0;
@@ -67,7 +68,7 @@ int main()
 		th.join();
 	}
 
-	cout << wallet.getPounds() << "." << wallet.getPence();
+	cout << "\n" << wallet.getPounds() << "." << wallet.getPence();
 
 	//End the clock
 	the_clock::time_point end = the_clock::now();
