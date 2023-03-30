@@ -28,17 +28,22 @@ std::mutex mutex;
 
 Wallet wallet;
 
-Gamba skinList;
+Gamba gamba;
 
 int threadFunc()
 {
 	srand(time(0));
-	int randomSkin = (rand()%skinList.getVec().size());
 
 	for (int i = 0; i < 100000; ++i)
 	{
+		//Unique Mutex
 		std::unique_lock<std::mutex>lock(mutex);
-		wallet.add(5, -2);
+
+		std::vector<Skins> skinList = gamba.getVec();
+		int randomSkin = (rand() % skinList.size());
+		Skins currentSkin = skinList[randomSkin];
+		wallet.subtract(2, 15);
+		wallet.add(currentSkin.pounds, currentSkin.pence);
 	}
 
 	return 0;
