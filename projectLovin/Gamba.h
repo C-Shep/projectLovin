@@ -19,13 +19,14 @@ class Gamba
 public:
 	Gamba();
 	~Gamba();
-	std::vector<Skins> getVec();
+	std::vector<Skins> getVec(int rare);
 
 private:
-
-
-	Skins skinArray[3];
-	std::vector<Skins> sVec;
+	std::vector<Skins> blueVec;
+	std::vector<Skins> purpleVec;
+	std::vector<Skins> pinkVec;
+	std::vector<Skins> redVec;
+	std::vector<Skins> yellowVec;
 };
 
 #endif
