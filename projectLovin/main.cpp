@@ -33,6 +33,7 @@ Gamba gamba;//CHANGE NAME
 
 //all skins collected
 std::vector<Skins> myInv;
+std::vector<Skins> myGoods;
 
 //Fuction for the skin roller
 int threadFunc()
@@ -48,7 +49,7 @@ int threadFunc()
 		//rarity - a random int between 1 and 100 (0 and 99)
 		int randomRarity = (rand() % 100);
 
-		//skinList is all of the skins
+		//skinList is list of the skins that will be filled in a bit
 		std::vector<Skins> skinList;
 
 		//TODO MAKE THESE NOT MAGIC NUMBERS
@@ -87,6 +88,11 @@ int threadFunc()
 		wallet.add(currentSkin.pounds, currentSkin.pence);
 		cout << "\n" << currentSkin.name << " - " << currentSkin.pounds << "." << currentSkin.pence << "    " << randomRarity;
 
+		if (currentSkin.pounds >= 2)
+		{
+			myGoods.push_back(currentSkin);
+		}
+
 		myInv.push_back(currentSkin);
 	}
 
@@ -96,8 +102,8 @@ int threadFunc()
 //Display every skin collected
 int display()
 {
-	std::unique_lock<std::mutex>lock(mutex1);
-	for (auto& sk : myInv)
+
+	for (auto& sk : myGoods)
 	{
 		cout << "\n" << sk.name;
 	}
@@ -137,17 +143,8 @@ int main()
 
 	the_clock::time_point start1 = the_clock::now();
 
-	std::vector<thread> threads1;
-	display();
-	for (int i = 0; i < 10; ++i)
-	{
-		threads1.push_back(thread(display));
-	}
-
-	for (auto& th1 : threads1)
-	{
-		th1.join();
-	}
+	thread knifeThread(display);
+	knifeThread.join();
 
 	//End the clock
 	the_clock::time_point end1 = the_clock::now();
