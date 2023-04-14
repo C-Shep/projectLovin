@@ -106,12 +106,8 @@ int threadFunc()
 void display()
 {
 	std::unique_lock<std::mutex> displayLock(displayMutex);
-	//myCV.wait(displayLock);
-	//for (auto& sk : myGoods)
-	//{
-	//	cout << "\n" << sk.name;
-	//	myGoods
-	//}
+	myCV.wait(displayLock);
+
 	while (myGoods.empty() != true)
 	{
 		Skins displaySkin;
@@ -123,7 +119,6 @@ void display()
 
 int main()
 {
-	
 	//GAMBLE CODE
 	// 
 	//Begin the clock
