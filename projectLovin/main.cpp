@@ -10,9 +10,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include <Windows.h>
+#include <queue>
 
 #include "Wallet.h"
 #include "Gamba.h"
+#include "Farm.h"
+#include "Task.h"
 
 using std::cout;
 using std::string;
@@ -39,6 +42,8 @@ std::condition_variable myCV;
 bool shouldShowTotal = true;
 int showNum = 2;
 
+//std::queue 
+
 std::mutex mutex;
 std::mutex displayMutex;
 
@@ -51,13 +56,16 @@ std::vector<Skins> myInv;
 std::vector<Skins> myGoods;
 
 //Fuction for the skin roller
-int threadFunc(float randRarityNum, int randSkinNum)
+int threadFunc()
 {
 	//Unique Mutex
-	std::unique_lock<std::mutex>lock(mutex);
+	//std::unique_lock<std::mutex>lock(mutex);
+
+
+	int randSkin = rand();	//complete random number
 
 	//rarity - a random int between 1 and 100 (0 and 99)
-	float randomRarity = randRarityNum;
+	float randomRarity = (static_cast <float> (rand() / static_cast <float> (RAND_MAX))*100.0f);	//random float for the rarity
 
 	//skinList is list of the skins that will be filled in a bit
 	std::vector<std::vector<Skins>> skinList;
@@ -85,12 +93,12 @@ int threadFunc(float randRarityNum, int randSkinNum)
 	}
 
 	//randomSkin is a random number
-	int randomSkin = randSkinNum % skinList[chosenCase].size();
+	int randomSkin = randSkin % skinList[chosenCase].size();
 
 	//currentSkin is the selected Skin in the whole list from randomSkin
 	Skins currentSkin = skinList[chosenCase][randomSkin];
 
-	//Remove standard key price TODO: MAKE NOT MAGIC NUMBER
+	//Remove standard key price
 	wallet.subtract(standardKeyPounds, standardKeyPence);
 
 	//Gain money equal to the skins price and display
@@ -141,7 +149,7 @@ int display()
 	}
 
 	//wait until the 
-	myCV.wait(displayLock, [&] {return shouldShowTotal; });
+	myCV.wait(displayLock, [&] {return shouldShowTotal;});
 
 	//knock down the showNum
 	showNum -= 1;
@@ -158,20 +166,34 @@ int display()
 //openCases gets the random rarity and random skins randomised
 void openCases(int caseAmount)
 {
-	int threadNum = std::thread::hardware_concurrency();
+	static int threadNum = std::thread::hardware_concurrency();
 	std::vector<thread> threads;	//a vector of empty threads
+	int caseCounter = caseAmount;
 
-	//for every case that the user wants to open...
-	for (int i = 0; i < caseAmount; ++i)
+	for (int i = 0; i < threadNum; i++)
 	{
-		float randRarity = 1 + rand() % 100;	//random number from 1 to 100
-		float r = static_cast <float> (rand() / static_cast <float> (RAND_MAX));	//random float for the rarity
-		int randSkin = rand();	//complete random number
-		threads.push_back(thread(threadFunc, r*100, randSkin));	//pass in the random rarity and random skin to the unbox fucion
-
-		//Clean up after yourself
-		threads.back().join();
+		threads.push_back(std::thread([&](){
+			srand(time(NULL)+i);
+			while (true)
+			{
+				std::unique_lock<std::mutex>lock(mutex);
+				if (caseCounter <= 0)
+				{
+					return;
+				}
+				threadFunc();
+				caseCounter--;
+			}
+		}));
 	}
+
+	for (auto&th:threads)
+	{
+		th.join();
+	}
+
+	return;
+
 }
 
 int main()
@@ -197,6 +219,8 @@ int main()
 	//amount of cases to open in one batch
 	int caseAmount;
 
+
+
 	//while you still want to be opening cases
 	while (addict)
 	{
@@ -213,7 +237,18 @@ int main()
 			std::cin >> chosenCase;
 			std::cout << "\n";
 
+			//Begin Timer
+			the_clock::time_point start = the_clock::now();
+
+			//Open Case Function
 			openCases(caseAmount);
+
+			//End the clock
+			the_clock::time_point end = the_clock::now();
+			//Calculate the time taken 
+			auto time_taken = duration_cast<milliseconds>(end - start).count();
+			//Display the overall time taken
+			cout << "\nit took " << time_taken << " ms." << "\n\n";
 		}
 		else {
 			//if the user decides to not open any more cases, stop asking them to
@@ -224,13 +259,25 @@ int main()
 
 	//----- Display-----
 	#pragma region ///Display
-	thread knifeThread1(display);
-	thread knifeThread2(display);
+
+	//Choose amount of threads
+	the_clock::time_point displayStart = the_clock::now();
+
+	thread goodThread1(display);
+	thread goodThread2(display);
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
-	knifeThread1.join();
-	knifeThread2.join();
+	goodThread1.join();
+	goodThread2.join();
+
+	//End the clock
+	the_clock::time_point displayEnd = the_clock::now();
+	//Calculate the time taken 
+	auto displayTimeTaken = duration_cast<milliseconds>(displayEnd - displayStart).count();
+	//Display the overall time taken
+	cout << "\nit took " << displayTimeTaken << " ms." << "\n\n";
 	#pragma endregion ///Display
+
 	return 0;
 }
