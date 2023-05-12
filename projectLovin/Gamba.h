@@ -11,6 +11,7 @@ struct Skins
 	std::string name;
 	int pounds;
 	int pence;
+	int myCase;
 	int rarity;
 };
 
@@ -19,14 +20,16 @@ class Gamba
 public:
 	Gamba();
 	~Gamba();
-	std::vector<Skins> getVec(int rare);
+	std::vector<std::vector<Skins>> getVec(int rare);
 
 private:
-	std::vector<Skins> blueVec;
-	std::vector<Skins> purpleVec;
-	std::vector<Skins> pinkVec;
-	std::vector<Skins> redVec;
-	std::vector<Skins> yellowVec;
+	int vecSize = 2;
+
+	std::vector<std::vector<Skins>> blueVec;
+	std::vector<std::vector<Skins>> purpleVec;
+	std::vector<std::vector<Skins>> pinkVec;
+	std::vector<std::vector<Skins>> redVec;
+	std::vector<std::vector<Skins>> yellowVec;
 };
 
 #endif
