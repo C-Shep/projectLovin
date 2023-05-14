@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <Windows.h>
-#include <queue>
 
 #include "Wallet.h"
 #include "Gamba.h"
@@ -27,8 +26,6 @@ typedef std::chrono::steady_clock the_clock;
 float standardKeyPrice = -1;
 int standardKeyPounds;
 int standardKeyPence;
-
-float totalMoney;
 
 int wantedThreadAmount = 0;
 
@@ -122,7 +119,7 @@ void showTotal()
 	float pence = wallet.getPence();
 	pence = pence / 100;
 
-	totalMoney = pound + pence;
+	float totalMoney = pound + pence;
 
 	cout << "\n\nTotal Profit/Loss = " << totalMoney << "\n\n";
 }
@@ -175,27 +172,41 @@ int display()
 //openCases gets the random rarity and random skins randomised
 void openCases(int caseAmount)
 {
-	static int threadNum = std::thread::hardware_concurrency();
 	std::vector<thread> threads;	//a vector of empty threads
-	int caseCounter = caseAmount;
+	int caseCounter = caseAmount;	//amount of cases to be opened
 
-	for (int i = 0; i < threadNum; i++)
+	//Farmimg
+	//For every thread the user wants...
+	for (int i = 0; i < wantedThreadAmount; i++)
 	{
+		//thread with lamba function
 		threads.push_back(std::thread([&](){
+
+			//Randomise each threads seed (Doctors hate him)
 			srand(time(NULL)+i);
+
+			//Loop
 			while (true)
 			{
+				//Mutex
 				std::unique_lock<std::mutex>lock(mutex);
+
+				//If all cases have been opened, stop opening cases
 				if (caseCounter <= 0)
 				{
 					return;
 				}
+
+				//Open 1 case
 				threadFunc();
+
+				//Tick down the counter on how many cases have been opened
 				caseCounter--;
 			}
 		}));
 	}
 
+	//Join the threads
 	for (auto&th:threads)
 	{
 		th.join();
@@ -222,16 +233,13 @@ int main()
 		}
 	}
 
-
 	//get ready to gamble
 	//prompt user to input price of a key - this is how much obtaining one skin
-
 	while (standardKeyPrice < 0)
 	{
 		std::cout << "\nPlease enter the price of a key - ";
 		std::cin >> standardKeyPrice;
 		std::cout << "\n";
-
 	}
 
 	//convert float to 2 ints
@@ -306,6 +314,8 @@ int main()
 	goodThread1.join();
 	goodThread2.join();
 
+	
+
 	//End the clock
 	the_clock::time_point displayEnd = the_clock::now();
 	//Calculate the time taken 
@@ -313,6 +323,10 @@ int main()
 	//Display the overall time taken
 	cout << "\nit took " << displayTimeTaken << " ms." << "\n\n";
 	#pragma endregion ///Display
+
+	char programEnd;
+	std::cout << "\nInput anyhing to end the program\n";
+	std::cin >> programEnd;
 
 	return 0;
 }

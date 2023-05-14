@@ -14,33 +14,16 @@ void Wallet::add(int pounds, int pence)
 {
 	pounds_ += pounds;
 	pence_ -= pence;
-	//if (pounds >= 0)
-	//{
-	//	pence_ += pence;
-//
-		if (pence_ >= 100) {
-			pounds_++;
-			pence_ -= 100;
-		}
 
-		if (pence_ < 0) {
-			pounds_--;
-			pence_ += 99;
-		}
-	//}
-	//else {
-		
+	if (pence_ >= 100) {
+		pounds_++;
+		pence_ -= 100;
+	}
 
-	//	if (pence_ >= 100) {
-	//		pounds_++;
-	//		pence_ -= 100;
-	//	}
-//
-	//	if (pence_ < 0) {
-	//		pounds_++;
-	//		pence_ += 99;
-	//	}
-	//}
+	if (pence_ < 0) {
+		pounds_--;
+		pence_ += 99;
+	}
 }
 
 void Wallet::subtract(int pounds, int pence)
