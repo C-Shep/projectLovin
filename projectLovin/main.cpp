@@ -14,8 +14,6 @@
 
 #include "Wallet.h"
 #include "Gamba.h"
-#include "Farm.h"
-#include "Task.h"
 
 using std::cout;
 using std::string;
@@ -26,11 +24,15 @@ using std::chrono::milliseconds;
 
 typedef std::chrono::steady_clock the_clock;
 
-float standardKeyPrice;
+float standardKeyPrice = -1;
 int standardKeyPounds;
 int standardKeyPence;
 
-int chosenCase = 0;
+float totalMoney;
+
+int wantedThreadAmount = 0;
+
+int chosenCase = -1;
 
 float blueChance = 79.92;
 float purpleChance = 95.90;
@@ -115,7 +117,14 @@ int threadFunc()
 
 void showTotal()
 {
-	cout << "\n\nTotal Profit/Loss = " << wallet.getPounds() << "." << wallet.getPence() << "\n\n";
+	//Get final money amount from 
+	float pound = wallet.getPounds();
+	float pence = wallet.getPence();
+	pence = pence / 100;
+
+	totalMoney = pound + pence;
+
+	cout << "\n\nTotal Profit/Loss = " << totalMoney << "\n\n";
 }
 
 //Display every skin collected
@@ -200,11 +209,30 @@ int main()
 {
 	//----- Gamble -----
 	#pragma region ///Gamble
+
+	//Ask how many threads you want to use
+	while (wantedThreadAmount <= 0 || wantedThreadAmount > std::thread::hardware_concurrency())
+	{
+		std::cout << "\nHow many threads would you like to use? : ";
+		std::cin >> wantedThreadAmount;
+		std::cout << "\n";
+		if (wantedThreadAmount <= 0 || wantedThreadAmount > std::thread::hardware_concurrency())
+		{
+			std::cout << "ERROR! Please enter a valid number!";
+		}
+	}
+
+
 	//get ready to gamble
 	//prompt user to input price of a key - this is how much obtaining one skin
-	std::cout << "\nPlease enter the price of a key - ";
-	std::cin >> standardKeyPrice;
-	std::cout << "\n";
+
+	while (standardKeyPrice < 0)
+	{
+		std::cout << "\nPlease enter the price of a key - ";
+		std::cin >> standardKeyPrice;
+		std::cout << "\n";
+
+	}
 
 	//convert float to 2 ints
 	standardKeyPounds = standardKeyPrice;
@@ -216,26 +244,33 @@ int main()
 	//addict is the bool variable which dictates if you want to keep openign cases or not
 	bool addict = true;
 
-	//amount of cases to open in one batch
-	int caseAmount;
-
-
-
 	//while you still want to be opening cases
 	while (addict)
 	{
+		//Reset case type
+		chosenCase = -1;
+
+		//amount of cases to open in one batch
+		int caseAmount = -1;
+
 		//ask user how many casses to open
-		std::cout << "\nOpen some cases? Input number of cases desired or 0 to end - ";
-		std::cin >> caseAmount;
-		std::cout << "\n";
+		while (caseAmount < 0)
+		{
+			std::cout << "\nOpen some cases? Input number of cases desired or 0 to end - ";
+			std::cin >> caseAmount;
+			std::cout << "\n";
+		}
 
 		//if the user want to open cases
 		if (caseAmount > 0)
 		{
 			//ask player waht case they want to open
-			std::cout << "\nWhat type of case would you like to open? 0 = Chroma 2, 1 = Wildfire : ";
-			std::cin >> chosenCase;
-			std::cout << "\n";
+			while (chosenCase < 0 || chosenCase > 1)
+			{
+				std::cout << "\nWhat type of case would you like to open? 0 = Chroma 2, 1 = Wildfire : ";
+				std::cin >> chosenCase;
+				std::cout << "\n";
+			}
 
 			//Begin Timer
 			the_clock::time_point start = the_clock::now();

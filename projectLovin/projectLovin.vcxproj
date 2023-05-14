@@ -139,18 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="City.cpp" />
-    <ClCompile Include="Farm.cpp" />
     <ClCompile Include="Gamba.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Task.cpp" />
     <ClCompile Include="Wallet.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="City.h" />
-    <ClInclude Include="Farm.h" />
     <ClInclude Include="Gamba.h" />
-    <ClInclude Include="Task.h" />
     <ClInclude Include="Wallet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

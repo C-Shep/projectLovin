@@ -1,1 +1,13 @@
-﻿  projectLovin.vcxproj -> C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\x64\Debug\projectLovin.exe
+﻿  main.cpp
+C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\projectLovin\main.cpp(37,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\projectLovin\main.cpp(38,27): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\projectLovin\main.cpp(39,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\projectLovin\main.cpp(40,24): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\projectLovin\main.cpp(121,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\projectLovin\main.cpp(122,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\projectLovin\main.cpp(185,20): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\projectLovin\main.cpp(214,55): warning C4018: '>': signed/unsigned mismatch
+C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\projectLovin\main.cpp(219,53): warning C4018: '>': signed/unsigned mismatch
+C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\projectLovin\main.cpp(238,22): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\projectLovin\main.cpp(239,60): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  projectLovin.vcxproj -> C:\Users\crshe\OneDrive\Documents\_Projects\cmp202\projectLovin\x64\Debug\projectLovin.exe
